@@ -1,0 +1,103 @@
+{
+  "title": "STRIFF Adjustable Laptop Stand #shorts",
+  "category": "Desk Setup",
+  "hook_candidates": [
+    {
+      "angle": "everyday_friction",
+      "hook": "Neck pain from prolonged laptop use",
+      "rationale": "Directly references verified neck strain pain point from ergonomic use."
+    },
+    {
+      "angle": "curiosity",
+      "hook": "Why are laptops always too low?",
+      "rationale": "Sparks interest in ergonomic solution without aggressive sales pitch."
+    },
+    {
+      "angle": "buyer_guide",
+      "hook": "Laptop stand for eye-level viewing",
+      "rationale": "Immediately useful for shoppers evaluating ergonomics."
+    }
+  ],
+  "selected_hook_angle": "everyday_friction",
+  "hook": "Neck pain from prolonged laptop use",
+  "buying_consideration": "Best on flat, smooth desk surfaces",
+  "script": "Neck pain from prolonged laptop use. This STRIFF stand lifts your screen to eye level. Multi-angle adjustment from 15 to 45 degrees prevents hunching. The hollow design keeps your laptop cool with active ventilation. Anti-slip pads work best on flat surfaces. Check the details and current price through the link in the description.",
+  "features": [
+    "Multi-angle height adjustment",
+    "Ventilated hollow design",
+    "Anti-slip silicone pads"
+  ],
+  "scenes": [
+    {
+      "scene_id": 1,
+      "type": "hook",
+      "start": 0.0,
+      "end": 2.2,
+      "narration": "Neck pain from prolonged laptop use.",
+      "visual_action": "Close-up of person hunching over a laptop, shoulders rounded, then subtle graphic arrow pointing to screen height.",
+      "on_screen_text": "Neck pain trigger",
+      "transition": "cut",
+      "motion": "slow push-in",
+      "evidence_source": "Verified bullet: Ergonomic multi-angle height adjustment from 15 to 45 degrees"
+    },
+    {
+      "scene_id": 2,
+      "type": "reveal",
+      "start": 2.2,
+      "end": 6.0,
+      "narration": "This STRIFF stand lifts your screen to eye level.",
+      "visual_action": "Direct product showcase: STRIFF stand unfolded on a clean desk, laptop placed showing eye-level alignment.",
+      "on_screen_text": "STRIFF Laptop Stand",
+      "transition": "cut",
+      "motion": "steady clear display",
+      "evidence_source": "Product model and identity"
+    },
+    {
+      "scene_id": 3,
+      "type": "value_demo",
+      "start": 6.0,
+      "end": 17.5,
+      "narration": "Multi-angle adjustment from 15 to 45 degrees prevents hunching. The hollow design keeps your laptop cool with active ventilation.",
+      "visual_action": "Close-ups showing hand adjusting hinge angles to 15, 30, 45 degrees; panning over hollow underside vents; finger touching anti-slip pads.",
+      "on_screen_text": "Angle Adjustment Cooling",
+      "transition": "cut",
+      "motion": "pan across functional parts",
+      "evidence_source": "Verified specs: multi-angle adjustment and ventilated hollow design"
+    },
+    {
+      "scene_id": 4,
+      "type": "consideration",
+      "start": 17.5,
+      "end": 23.5,
+      "narration": "Anti-slip pads work best on flat surfaces.",
+      "visual_action": "Shot of silicone pads on a flat desk surface; side view demonstrating grip; subtle text overlay 'Flat surface optimal'.",
+      "on_screen_text": "Key Consideration",
+      "transition": "cut",
+      "motion": "steady focus on pad",
+      "evidence_source": "Physical limitation: anti-slip silicone pad design requirement"
+    },
+    {
+      "scene_id": 5,
+      "type": "cta",
+      "start": 23.5,
+      "end": 27.0,
+      "narration": "Check the details and current price through the link in the description.",
+      "visual_action": "Product in compact folded form on a desk, clean setup overview; subtle pull back to show entire arrangement.",
+      "on_screen_text": "Link in Description",
+      "transition": "crossfade",
+      "motion": "subtle pull back",
+      "evidence_source": "Product link availability"
+    }
+  ],
+  "description": "The STRIFF Adjustable Laptop Tabletop Stand addresses common workspace ergonomics for remote workers and students. Priced at ₹499 with a 4.3/5 rating from over 14,000 reviews, it features multi-angle height adjustment, ventilated cooling, anti-slip stability, and a foldable lightweight build that fits any backpack sleeve. The stand raises your screen to eye level, reducing neck strain and hunching during long sessions.\n\nFor detailed specifications and to check the current price, visit the link in the description. #ad #FTC disclosure: This description contains affiliate links, and I may earn a commission from qualifying purchases at no extra cost to you.",
+  "pinned_comment": "STRIFF Laptop Stand - ₹499, 4.3/5 on 14k+ reviews. Affiliate link in description. #ad #FTC (Disclosure: As an Amazon Associate, I earn from qualifying purchases at no additional cost to you.)",
+  "tags": [
+    "youtube shorts",
+    "desk setup",
+    "ergonomics",
+    "laptop stand",
+    "workspace optimization",
+    "productivity"
+  ],
+  "word_count": 53
+}

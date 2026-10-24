@@ -142,6 +142,12 @@ def build_product_short(candidate: dict, target_slot: str) -> Path:
     log("4. Synthesizing natural voiceover via local Kokoro-82M...")
     voice_res = voice.build_voiceover(script_data["script"], proj_dir)
     
+    # Align structured scene plan timestamps with physical speech word boundaries
+    if "scenes" in project_meta and voice_res.get("words"):
+        project_meta["scenes"] = scriptwriter.align_scenes_with_timings(project_meta["scenes"], voice_res)
+        (proj_dir / "project.json").write_text(json.dumps(project_meta, indent=2, ensure_ascii=False), encoding="utf-8")
+        log(f"Aligned {len(project_meta['scenes'])} scenes to voiceover duration ({voice_res.get('duration'):.1f}s)")
+    
     log("5. Rendering 9:16 vertical Short video with real footage + subtitles...")
     final_video = render.render_video(proj_dir)
     

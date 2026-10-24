@@ -64,6 +64,48 @@ def run_qa(proj_dir: Path) -> dict:
     has_disclosure = bool(re.search(r"\b(as an amazon associate|earn from qualifying purchases|affiliate link|qualifying purchases|affiliate commission|sponsored)\b", desc, re.I))
     if not has_disclosure:
         errors.append("Description is missing mandatory Amazon Associate / FTC disclosure")
+
+    # 2b. Creative Director & Shot Plan QA
+    scenes = meta.get("scenes", [])
+    if not scenes or len(scenes) < 4:
+        errors.append(f"Creative Director error: 'scenes' plan must contain at least 4 scenes (found {len(scenes)})")
+    else:
+        types_found = {s.get("type") for s in scenes}
+        if not {"hook", "reveal"}.issubset(types_found):
+            errors.append(f"Scenes plan missing required structural types: {types_found}")
+            
+        prev_end = 0.0
+        for i, sc in enumerate(scenes):
+            sc_id = sc.get("scene_id", i + 1)
+            st = sc.get("start", -1.0)
+            en = sc.get("end", -1.0)
+            narr = sc.get("narration", "").strip()
+            vis = sc.get("visual_action", "").strip()
+            ost = sc.get("on_screen_text", "").strip()
+            evi = sc.get("evidence_source", "").strip()
+            
+            if st < 0 or en <= st:
+                errors.append(f"Scene {sc_id} has invalid timing bounds: start={st}, end={en}")
+            if st < prev_end - 0.5:
+                errors.append(f"Scene {sc_id} timing non-monotonic: start={st} before previous end={prev_end}")
+            prev_end = en
+            
+            if not narr:
+                errors.append(f"Scene {sc_id} is missing narration")
+            if not vis:
+                errors.append(f"Scene {sc_id} is missing visual_action description")
+            if not ost:
+                errors.append(f"Scene {sc_id} is missing on_screen_text")
+            if not evi:
+                errors.append(f"Scene {sc_id} is missing evidence_source for claim")
+
+    consideration = meta.get("buying_consideration", "").strip()
+    if not consideration or len(consideration.split()) < 3:
+        errors.append(f"Creative Director error: missing or insufficient 'buying_consideration': '{consideration}'")
+        
+    candidates = meta.get("hook_candidates", [])
+    if not candidates or len(candidates) < 2:
+        warnings.append(f"Creative Director warning: expected >= 2 hook candidates (found {len(candidates)})")
         
     # 3. Subtitles QA
     ass_path = proj_dir / "subs.ass"
@@ -111,8 +153,8 @@ def run_qa(proj_dir: Path) -> dict:
                 errors.append(f"Invalid video resolution: {w}x{h} (must be exactly 1080x1920)")
             if codec != "h264":
                 errors.append(f"Invalid video codec: {codec} (must be h264)")
-            if not (15.0 <= dur <= 58.0):
-                errors.append(f"Invalid duration: {dur:.1f}s (must be between 15s and 58s)")
+            if not (18.0 <= dur <= 38.0):
+                errors.append(f"Invalid duration: {dur:.1f}s (must be between 18s and 38s for high retention Shorts)")
             if r_fps not in ["30/1", "2997/100", "30000/1001", "30"]:
                 warnings.append(f"Non-standard frame rate: {r_fps}")
 
