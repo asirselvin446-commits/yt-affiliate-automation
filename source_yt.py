@@ -6,7 +6,7 @@ import json, os, re, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-PY = HERE / ".venv/Scripts/python.exe"
+PY = Path(sys.executable)
 
 # Words indicating bad/unusable footage
 BAD_KEYWORDS = re.compile(

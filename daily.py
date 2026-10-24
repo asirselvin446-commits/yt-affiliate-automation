@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 
-PY = ROOT / ".venv/Scripts/python.exe"
+PY = Path(sys.executable)
 LOCK = ROOT / "daily.lock"
 LOGS = ROOT / "logs"
 CONFIG_FILE = ROOT / "config.json"
@@ -209,6 +209,7 @@ def run_pipeline():
     except Exception as e:
         log(f"Pipeline error: {e}")
         notify("Affiliate Pipeline Warning ⚠️", str(e)[:150])
+        raise e
     finally:
         release_lock()
 
