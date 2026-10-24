@@ -45,9 +45,9 @@ def fetch_product(url_or_asin: str) -> dict:
     # Title
     title_el = soup.select_one("#productTitle") or soup.select_one("h1.a-size-large") or soup.find("title")
     title = title_el.get_text(strip=True) if title_el else ""
-    title = re.sub(r"\s*:\s*Amazon\.in.*$", "", title).strip()
-    if not title or len(title) < 5 or "Page Not Found" in title or "Looking for something?" in title:
-        raise ValueError(f"Product page for ASIN {asin} returned no valid title (likely 404 or inactive)")
+    bad_titles = {"amazon.in", "amazon", "page not found", "robot check"}
+    if not title or len(title) < 5 or title.lower() in bad_titles or "looking for something?" in title.lower():
+        raise ValueError(f"Product page for ASIN {asin} returned no valid product title: '{title}'")
 
     # Price
     price_whole = soup.select_one(".a-price-whole")
