@@ -1,0 +1,65 @@
+name: Daily Amazon Affiliate YouTube Shorts
+
+on:
+  schedule:
+    # 06:30 UTC = 12:00 PM IST
+    # 12:30 UTC = 06:00 PM IST
+    - cron: '30 6,12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install System Dependencies (FFmpeg, espeak-ng)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Restore Credentials from Secrets
+        env:
+          TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
+          CLIENT_SECRET_JSON: ${{ secrets.YT_CLIENT_SECRET_JSON }}
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -n "$TOKEN_JSON" ]; then
+            echo "$TOKEN_JSON" > token.json
+          fi
+          if [ -n "$CLIENT_SECRET_JSON" ]; then
+            echo "$CLIENT_SECRET_JSON" > client_secret.json
+          fi
+          if [ -n "$OPENROUTER_KEY" ]; then
+            echo "OPENROUTER_API_KEY=$OPENROUTER_KEY" >> .env
+          fi
+
+      - name: Run Daily Affiliate Automation Pipeline
+        run: |
+          python daily.py
+
+      - name: Commit and Push State Updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state.json verified_catalog.json config.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore(auto): update publication state [skip ci]" && git push)

@@ -1,0 +1,30 @@
+# Python & Virtual Environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Local Credentials & Secrets (Configured via GitHub Secrets)
+token.json
+client_secret.json
+.env
+auth_url.txt
+daily.lock
+
+# Temporary and Media Storage
+logs/
+projects/
+test_project/
+test_source/
+test_voice/
+*.mp4
+*.mp3
+*.wav
+*.ass
+*.png
+*.jpg
+!slides/*.jpg
+
+# System
+.DS_Store
+Thumbs.db

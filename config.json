@@ -1,0 +1,20 @@
+{
+  "channel_title": "Best Amazon Finds",
+  "marketplace": "amazon.in",
+  "tag": "asirselvin336-21",
+  "schedule": [
+    {"slot": "12:00", "label": "Noon Deal"},
+    {"slot": "18:00", "label": "Evening Prime"}
+  ],
+  "categories": [
+    "kitchen-gadgets",
+    "smart-home",
+    "desk-setup",
+    "travel-essentials",
+    "car-accessories",
+    "daily-life-savers"
+  ],
+  "min_rating": 4.0,
+  "max_price": 5000,
+  "paused": false
+}
