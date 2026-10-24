@@ -186,12 +186,21 @@ def search_and_download_product_clip(
     
     dl_res = subprocess.run(dl_cmd, capture_output=True, text=True, timeout=180)
     if not raw_video.exists():
-        # Fallback format if merge failed
-        dl_cmd[6] = "best[ext=mp4]/best"
-        subprocess.run(dl_cmd, capture_output=True, text=True, timeout=120)
+        # Fallback format if initial stream merge failed
+        fallback_dl_cmd = [
+            str(PY), "-m", "yt_dlp",
+            "-q", "--no-progress",
+            "--no-playlist",
+            "--extractor-args", "youtube:player_client=android,web,ios",
+            "-f", "best[ext=mp4]/best",
+            "-o", str(raw_video),
+            video_url
+        ]
+        fallback_res = subprocess.run(fallback_dl_cmd, capture_output=True, text=True, timeout=120)
         
     if not raw_video.exists():
-        raise RuntimeError(f"Failed to download YouTube footage from {video_url}:\n{dl_res.stderr[-300:]}")
+        err_msg = dl_res.stderr[-300:] if dl_res.stderr else (fallback_res.stderr[-300:] if 'fallback_res' in locals() else "Unknown yt-dlp error")
+        raise RuntimeError(f"Failed to download YouTube footage from {video_url}:\n{err_msg}")
         
     # Trim initial talking-head intro (skip first 3.5s if video is longer than 40s)
     # to jump straight into product footage
