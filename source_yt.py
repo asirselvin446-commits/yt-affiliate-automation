@@ -4,9 +4,14 @@ and downloads the best clip using yt-dlp.
 """
 import json, os, re, subprocess, sys
 from pathlib import Path
-
 HERE = Path(__file__).resolve().parent
-PY = Path(sys.executable)
+venv_py = HERE / ".venv" / "Scripts" / "python.exe"
+if venv_py.exists():
+    PY = venv_py
+elif (HERE / ".venv" / "bin" / "python").exists():
+    PY = HERE / ".venv" / "bin" / "python"
+else:
+    PY = Path(sys.executable)
 
 BAD_KEYWORDS = re.compile(
     r"\b(compilation|podcast|reaction|live|full movie|animation|ai generated|roblox|minecraft|gta)\b",

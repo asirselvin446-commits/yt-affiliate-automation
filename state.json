@@ -1,5 +1,27 @@
 {
-  "slots": {},
-  "used_asins": [],
+  "slots": {
+    "2026-10-25 12:00": {
+      "asin": "B09NVPSCQT",
+      "video_id": "GxN1Deq58-w",
+      "title": "Your Wrist Just Upgraded! 🤖 #shorts",
+      "url": "https://youtube.com/shorts/GxN1Deq58-w",
+      "status": "uploaded",
+      "project": "20261025-B09NVPSCQT",
+      "created": "2026-10-24T11:40:03+05:30"
+    },
+    "2026-10-25 18:00": {
+      "asin": "B07XCM6T4N",
+      "video_id": "wahYvXHhT9I",
+      "title": "This ₹499 Laptop Stand is a GAME CHANGER! 💻 #shorts",
+      "url": "https://youtube.com/shorts/wahYvXHhT9I",
+      "status": "scheduled",
+      "publish_at": "2026-10-25T18:00:00+05:30",
+      "created": "2026-10-24T11:50:44.085962"
+    }
+  },
+  "used_asins": [
+    "B09NVPSCQT",
+    "B07XCM6T4N"
+  ],
   "posted_links": {}
 }

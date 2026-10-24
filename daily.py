@@ -9,6 +9,13 @@ from dotenv import load_dotenv
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 
+try:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+except Exception:
+    pass
+
 PY = Path(sys.executable)
 LOCK = ROOT / "daily.lock"
 LOGS = ROOT / "logs"

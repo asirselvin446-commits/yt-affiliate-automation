@@ -178,7 +178,15 @@ def render_video(proj_dir: Path) -> Path:
     # - Overlay bottom credit at (0, 1800)
     # - Apply ASS subtitles
     
-    ass_esc = str(ass_path).replace("\\", "/").replace(":", "\\:")
+    # Use relative path with posix slashes so FFmpeg's filter parser doesn't break on Windows 'C:' drive colons
+    try:
+        ass_rel = ass_path.relative_to(Path.cwd()).as_posix()
+    except Exception:
+        ass_rel = ass_path.as_posix()
+        if ":" in ass_rel:
+            ass_rel = ass_rel.replace(":", "\\\\:")
+    
+    ass_esc = ass_rel
     
     filter_complex = (
         # 1. Background blurred fill

@@ -70,18 +70,26 @@ def generate_script(product_data: dict, out_file: Path) -> dict:
             "messages": [
                 {"role": "system", "content": "You are a viral YouTube Shorts copywriter. You must output strictly valid JSON conforming to the requested schema. No conversational filler."},
                 {"role": "user", "content": prompt}
-            ],
-            "response_format": {"type": "json_object"}
+            ]
         }
         r = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload, timeout=60)
         if r.status_code == 200:
             res_content = r.json()["choices"][0]["message"]["content"]
             try:
-                data = json.loads(res_content)
+                cleaned = re.sub(r"^```(?:json)?\s*", "", res_content, flags=re.MULTILINE)
+                cleaned = re.sub(r"\s*```$", "", cleaned, flags=re.MULTILINE).strip()
+                data = json.loads(cleaned)
                 out_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
                 return data
             except Exception:
-                pass
+                m = re.search(r"(\{.*\})", res_content, re.DOTALL)
+                if m:
+                    try:
+                        data = json.loads(m.group(1))
+                        out_file.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+                        return data
+                    except Exception:
+                        pass
 
     query_file = out_file.parent / "script_prompt.md"
     query_file.write_text(prompt, encoding="utf-8")
@@ -94,7 +102,7 @@ def generate_script(product_data: dict, out_file: Path) -> dict:
         "-Q", "--yolo"
     ]
 
-    r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=180)
+    r = subprocess.run(cmd, stdin=subprocess.DEVNULL, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
     stdout = r.stdout.strip()
     
     # Extract JSON from output
