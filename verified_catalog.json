@@ -1,44 +1,42 @@
 [
   {
     "asin": "B071Z8M4KX",
-    "title": "boAt Bassheads 100 in Ear Wired Earphones with Mic(Black)",
-    "name": "boAt Bassheads 100 Earphones",
+    "brand": "boAt",
+    "model": "Bassheads 100",
+    "title": "boAt Bassheads 100 in-Ear Wired Earphones with Mic",
+    "name": "boAt Bassheads 100 Wired Earphones",
     "category": "Audio"
   },
   {
     "asin": "B0148NPH9I",
-    "title": "Amazon.in: Buy Logitech K380 Multi-Device Bluetooth Wireless Keyboard with Easy-Switch for Up to 3 Devices, Slim, 2 Year Battery-PC, Laptop, Windows, Mac, Chrome OS, Android, iPadOS, Apple TV - Lavender Lemonade Online at Low Prices in India | Logitech Reviews &amp;amp; Ratings",
+    "brand": "Logitech",
+    "model": "K380",
+    "title": "Logitech K380 Multi-Device Bluetooth Wireless Keyboard",
     "name": "Logitech K380 Bluetooth Keyboard",
     "category": "Desk Setup"
   },
   {
     "asin": "B07N8RQ6W7",
+    "brand": "Portronics",
+    "model": "MODESK",
     "title": "Portronics MODESK Universal Mobile Holder Stand",
-    "name": "Portronics MODESK Mobile Holder",
-    "category": "Desk Setup"
-  },
-  {
-    "asin": "B08N5WRWNW",
-    "title": "Apple 2020 MacBook Pro (13.3-inch/33.78 cm, M1 chip with 8‑core CPU and 8‑core GPU, 8GB RAM, 512GB SSD) - Space Grey",
-    "name": "Adjustable Laptop Stand",
+    "name": "Portronics MODESK Phone Stand",
     "category": "Desk Setup"
   },
   {
     "asin": "B07XCM6T4N",
+    "brand": "STRIFF",
+    "model": "Laptop Stand",
     "title": "STRIFF Adjustable Laptop Tabletop Stand",
-    "name": "Multi-Angle Phone & Tablet Stand",
+    "name": "STRIFF Adjustable Laptop Stand",
     "category": "Desk Setup"
   },
   {
-    "asin": "B078BNQ318",
-    "title": "OnePlus 8 Glacial Green",
-    "name": "Pigeon Shears Kitchen Scissors",
-    "category": "Kitchen"
-  },
-  {
     "asin": "B09NVPSCQT",
-    "title": "Noise ColorFit Pulse Grand Smart Watch with 1.69&quot;(4.29cm) HD Display, 60 Sports Modes, 150 Watch Faces, Fast Charge, Spo2, Stress, Sleep, Heart Rate Monitoring &amp; IP68 Waterproof (Jet Black)",
-    "name": "Noise Pulse 2 Max 1.85inch Smartwatch",
+    "brand": "Noise",
+    "model": "ColorFit Pulse Grand",
+    "title": "Noise ColorFit Pulse Grand Smart Watch with 1.69 inch HD Display",
+    "name": "Noise ColorFit Pulse Grand Smartwatch",
     "category": "Wearables"
   }
 ]

@@ -18,32 +18,42 @@ MARKETPLACE = os.getenv("AMAZON_MARKETPLACE", "amazon.in")
 DEFAULT_VERIFIED = [
     {
         "asin": "B071Z8M4KX",
-        "title": "boAt Bassheads 100 in Ear Wired Earphones with Mic",
-        "name": "boAt Bassheads 100 Earphones",
+        "brand": "boAt",
+        "model": "Bassheads 100",
+        "title": "boAt Bassheads 100 in-Ear Wired Earphones with Mic",
+        "name": "boAt Bassheads 100 Wired Earphones",
         "category": "Audio"
     },
     {
         "asin": "B0148NPH9I",
+        "brand": "Logitech",
+        "model": "K380",
         "title": "Logitech K380 Multi-Device Bluetooth Wireless Keyboard",
         "name": "Logitech K380 Bluetooth Keyboard",
         "category": "Desk Setup"
     },
     {
         "asin": "B07N8RQ6W7",
+        "brand": "Portronics",
+        "model": "MODESK",
         "title": "Portronics MODESK Universal Mobile Holder Stand",
-        "name": "Portronics MODESK Mobile Holder",
+        "name": "Portronics MODESK Phone Stand",
         "category": "Desk Setup"
     },
     {
         "asin": "B07XCM6T4N",
+        "brand": "STRIFF",
+        "model": "Laptop Stand",
         "title": "STRIFF Adjustable Laptop Tabletop Stand",
         "name": "STRIFF Adjustable Laptop Stand",
         "category": "Desk Setup"
     },
     {
         "asin": "B09NVPSCQT",
-        "title": "Noise ColorFit Pulse Grand Smart Watch with HD Display",
-        "name": "Noise ColorFit Pulse Smartwatch",
+        "brand": "Noise",
+        "model": "ColorFit Pulse Grand",
+        "title": "Noise ColorFit Pulse Grand Smart Watch with 1.69 inch HD Display",
+        "name": "Noise ColorFit Pulse Grand Smartwatch",
         "category": "Wearables"
     }
 ]

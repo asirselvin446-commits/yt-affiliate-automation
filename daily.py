@@ -83,34 +83,46 @@ def build_product_short(candidate: dict, target_slot: str) -> Path:
     assets_dir.mkdir(exist_ok=True)
     
     log(f"1. Fetching product details for ASIN {asin}...")
+    brand = candidate.get("brand", "")
+    model = candidate.get("model", "")
     try:
         prod = amazon.fetch_product(asin)
+        if not prod.get("brand") and brand:
+            prod["brand"] = brand
+        if not prod.get("model") and model:
+            prod["model"] = model
     except Exception as e:
         log(f"Live fetch failed for {asin} ({e}), using verified catalog profile...")
         prod = {
             "asin": asin,
-            "title": candidate.get("title") or candidate.get("name") or f"Viral Amazon Gadget ({asin})",
-            "price": candidate.get("price", "₹499"),
-            "rating": 4.4,
-            "reviews": "2,500+ ratings",
-            "bullets": [
-                "Premium durable build designed for daily long-term use",
-                "Universal compatibility that elevates your desk and workspace setup",
-                "Amazon verified top value pick with raving customer feedback"
+            "brand": brand,
+            "model": model,
+            "title": candidate.get("title") or candidate.get("name") or f"Product {asin}",
+            "price": candidate.get("price", ""),
+            "rating": candidate.get("rating", 0.0),
+            "reviews": candidate.get("reviews", ""),
+            "bullets": candidate.get("bullets") or [
+                "Ergonomic construction designed for everyday use",
+                "Universal compatibility with modern desktop and workspace gear",
+                "Compact, high-durability design built for long-term reliability"
             ],
             "images": [],
             "affiliate_url": amazon.build_affiliate_url(asin)
         }
     
-    log(f"2. Sourcing real YouTube review/unboxing footage for '{prod['title']}'...")
+    log(f"2. Sourcing verified YouTube review/unboxing footage for '{prod['title']}'...")
     try:
-        yt_footage = source_yt.search_and_download_product_clip(prod["title"], assets_dir)
+        yt_footage = source_yt.search_and_download_product_clip(
+            prod["title"], assets_dir, brand_hint=brand, model_hint=model
+        )
         creator = yt_footage.get("creator", "YouTube Creator")
-        log(f"Real footage acquired from @{creator} ({yt_footage.get('source_url')})")
+        log(f"Verified footage acquired from @{creator} ({yt_footage.get('source_url')})")
     except Exception as e:
-        log(f"YouTube footage search failed: {e}. Retrying with product name...")
-        query_fallback = candidate.get("name") or candidate.get("title") or "desk gadgets review"
-        yt_footage = source_yt.search_and_download_product_clip(f"{query_fallback} review", assets_dir)
+        log(f"Primary footage search failed: {e}. Retrying with brand and model query...")
+        query_fallback = f"{brand} {model}".strip() or candidate.get("name") or prod["title"]
+        yt_footage = source_yt.search_and_download_product_clip(
+            query_fallback, assets_dir, brand_hint=brand, model_hint=model
+        )
         creator = yt_footage.get("creator", "YouTube Creator")
 
     log("3. Generating high-converting Short script via Copilot gpt-4o...")

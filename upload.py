@@ -89,6 +89,13 @@ def post_pinned_comment(client, video_id: str, comment_text: str):
 
 def upload_short(proj_dir: Path, publish_at_iso: str = None) -> dict:
     proj_dir = Path(proj_dir)
+    
+    # Strict QA gate: failed QA must prevent uploading
+    import qa
+    qa_res = qa.run_qa(proj_dir)
+    if not qa_res["pass"]:
+        raise RuntimeError(f"Upload blocked by QA failure: {', '.join(qa_res['errors'])}")
+        
     video_file = proj_dir / "out/final.mp4"
     cover_file = proj_dir / "out/cover.jpg"
     meta = json.loads((proj_dir / "project.json").read_text(encoding="utf-8"))
