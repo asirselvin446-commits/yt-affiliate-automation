@@ -163,44 +163,63 @@ def search_and_download_product_clip(
         
     # Sort by score descending
     scored_candidates.sort(key=lambda x: x[0], reverse=True)
-    best_score, chosen, best_reason = scored_candidates[0]
     
-    video_url = chosen.get("url") or f"https://www.youtube.com/watch?v={chosen.get('id')}"
-    creator = chosen.get("uploader") or chosen.get("channel") or "YouTube Creator"
-    views = chosen.get("view_count") or 0
-    duration = float(chosen.get("duration") or 60)
-    
-    print(f"Selected verified clip: '{chosen.get('title')}' by @{creator} (score: {best_score:.1f}, {views:,} views)")
-    
-    # Download raw footage
-    dl_cmd = [
-        str(PY), "-m", "yt_dlp",
-        "-q", "--no-progress",
-        "--no-playlist",
-        "--extractor-args", "youtube:player_client=android,web",
-        "-f", "bv*[height<=1080]+ba/best[height<=1080]/best",
-        "--merge-output-format", "mp4",
-        "-o", str(raw_video),
-        video_url
-    ]
-    
-    dl_res = subprocess.run(dl_cmd, capture_output=True, text=True, timeout=180)
-    if not raw_video.exists():
-        # Fallback format if initial stream merge failed
-        fallback_dl_cmd = [
+    downloaded = False
+    chosen = None
+    best_score = 0.0
+    duration = 60.0
+    creator = "YouTube Creator"
+    views = 0
+
+    for cand_score, cand_item, cand_reason in scored_candidates:
+        cand_url = cand_item.get("url") or f"https://www.youtube.com/watch?v={cand_item.get('id')}"
+        cand_creator = cand_item.get("uploader") or cand_item.get("channel") or "YouTube Creator"
+        cand_views = cand_item.get("view_count") or 0
+        cand_dur = float(cand_item.get("duration") or 60)
+
+        print(f"Trying footage candidate: '{cand_item.get('title')}' by @{cand_creator} (score: {cand_score:.1f})")
+
+        dl_cmd = [
             str(PY), "-m", "yt_dlp",
             "-q", "--no-progress",
             "--no-playlist",
-            "--extractor-args", "youtube:player_client=android,web,ios",
-            "-f", "best[ext=mp4]/best",
+            "--js-runtimes", "node",
+            "--extractor-args", "youtube:player_client=ios,mweb,android",
+            "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/best[ext=mp4]/best",
+            "--merge-output-format", "mp4",
             "-o", str(raw_video),
-            video_url
+            cand_url
         ]
-        fallback_res = subprocess.run(fallback_dl_cmd, capture_output=True, text=True, timeout=120)
-        
-    if not raw_video.exists():
-        err_msg = dl_res.stderr[-300:] if dl_res.stderr else (fallback_res.stderr[-300:] if 'fallback_res' in locals() else "Unknown yt-dlp error")
-        raise RuntimeError(f"Failed to download YouTube footage from {video_url}:\n{err_msg}")
+        subprocess.run(dl_cmd, capture_output=True, text=True, timeout=120)
+
+        if not raw_video.exists():
+            fallback_dl_cmd = [
+                str(PY), "-m", "yt_dlp",
+                "-q", "--no-progress",
+                "--no-playlist",
+                "--js-runtimes", "node",
+                "--extractor-args", "youtube:player_client=android,web,ios",
+                "-f", "best[ext=mp4]/best",
+                "-o", str(raw_video),
+                cand_url
+            ]
+            subprocess.run(fallback_dl_cmd, capture_output=True, text=True, timeout=90)
+
+        if raw_video.exists() and raw_video.stat().st_size > 50_000:
+            downloaded = True
+            chosen = cand_item
+            best_score = cand_score
+            creator = cand_creator
+            duration = cand_dur
+            views = cand_views
+            video_url = cand_url
+            print(f"Successfully downloaded footage for '{chosen.get('title')}' by @{creator}")
+            break
+        else:
+            print(f"Download failed for '{cand_item.get('title')}', trying next candidate...")
+
+    if not downloaded:
+        raise RuntimeError(f"Could not download any of the {len(scored_candidates)} matching YouTube clips for '{product_query}'")
         
     # Trim initial talking-head intro (skip first 3.5s if video is longer than 40s)
     # to jump straight into product footage

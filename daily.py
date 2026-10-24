@@ -193,10 +193,24 @@ def run_pipeline():
                 
             log(f"Preparing Amazon Affiliate Short for slot: {slot}")
             import discover
-            pick = discover.pick_next_candidate()
-            asin = pick["asin"]
-            
-            proj = build_product_short(pick, slot)
+            proj = None
+            pick = None
+            asin = None
+            for attempt in range(3):
+                pick = discover.pick_next_candidate()
+                asin = pick["asin"]
+                try:
+                    proj = build_product_short(pick, slot)
+                    break
+                except Exception as e:
+                    log(f"Attempt {attempt + 1} failed for ASIN {asin}: {e}")
+                    if asin not in state.get("used_asins", []):
+                        state.setdefault("used_asins", []).append(asin)
+                    proj = None
+
+            if not proj:
+                log(f"Could not build Short for slot {slot} after attempts")
+                continue
             
             # Check YouTube authentication
             token_p = ROOT / "token.json"
