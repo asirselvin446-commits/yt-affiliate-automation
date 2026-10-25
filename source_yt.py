@@ -170,6 +170,8 @@ def search_and_download_product_clip(
     duration = 60.0
     creator = "YouTube Creator"
     views = 0
+    best_reason = ""
+    video_url = ""
 
     for cand_score, cand_item, cand_reason in scored_candidates:
         cand_url = cand_item.get("url") or f"https://www.youtube.com/watch?v={cand_item.get('id')}"
@@ -205,6 +207,7 @@ def search_and_download_product_clip(
             downloaded = True
             chosen = cand_item
             best_score = cand_score
+            best_reason = cand_reason
             creator = cand_creator
             duration = cand_dur
             views = cand_views
