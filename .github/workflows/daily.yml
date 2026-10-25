@@ -15,6 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
+    env:
+      TZ: Asia/Kolkata
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -50,11 +53,28 @@ jobs:
             echo "OPENROUTER_API_KEY=$OPENROUTER_KEY" >> $GITHUB_ENV
           fi
 
+      - name: Show yt-dlp version
+        run: |
+          python -m yt_dlp --version
+
+      # YouTube cookies: written from the YT_COOKIES_TXT repo secret
+      # (youtube.com cookies.txt export, added by the repo owner in
+      # Settings > Secrets, never in the repo or logs). No-op if absent.
+      # cookies.txt is never committed: the state step only adds
+      # state.json, verified_catalog.json, config.json.
+      - name: Restore YouTube Cookies from Secret
+        env:
+          YT_COOKIES_TXT: ${{ secrets.YT_COOKIES_TXT }}
+        run: |
+          python3 -c "import os; t=os.environ.get('YT_COOKIES_TXT','').strip(); open('cookies.txt','w',encoding='utf-8').write(t + '\n') if t else None"
+          if [ -s cookies.txt ]; then echo "cookies.txt restored (contents never logged)"; else echo "no YT_COOKIES_TXT secret - running without cookies"; fi
+
       - name: Run Daily Affiliate Automation Pipeline
         run: |
           python daily.py
 
       - name: Commit and Push State Updates
+        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
