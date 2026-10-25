@@ -17,11 +17,22 @@
       "status": "scheduled",
       "publish_at": "2026-10-25T18:00:00+05:30",
       "created": "2026-10-24T11:50:44.085962"
+    },
+    "2026-10-26 12:00": {
+      "asin": "B071Z8M4KX",
+      "video_id": "Ys8-GAh0Jj0",
+      "title": "boAt Bassheads 100 in-Ear Wired Ear Honest Overview #shorts",
+      "url": "https://youtube.com/shorts/Ys8-GAh0Jj0",
+      "status": "scheduled",
+      "publish_at": "2026-10-26T12:00:00+05:30",
+      "created": "2026-10-25T19:29:51.140478"
     }
   },
   "used_asins": [
     "B09NVPSCQT",
-    "B07XCM6T4N"
+    "B07XCM6T4N",
+    "B0148NPH9I",
+    "B071Z8M4KX"
   ],
   "posted_links": {}
 }
