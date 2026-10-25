@@ -43,12 +43,27 @@ def build_voiceover(text: str, out_dir: Path, voice: str = DEFAULT_VOICE) -> dic
     cmd = [str(KOKORO_PY), str(KOKORO_SCRIPT), str(req_file)]
     r = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=120)
     if r.returncode != 0:
-        raise RuntimeError(f"Kokoro TTS failed ({r.returncode}):\n{r.stderr}")
-
-    res = json.loads(r.stdout.strip())
-    line_info = res["lines"][0]
-    duration = line_info["duration"]
-    raw_words = line_info["words"]
+        print(f"Kokoro TTS primary attempt failed ({r.returncode}): {r.stderr[:200]}")
+        espeak_bin = shutil.which("espeak-ng") or shutil.which("espeak")
+        if espeak_bin:
+            print("Using espeak-ng fallback for voiceover...")
+            subprocess.run([espeak_bin, "-v", "en-us", "-s", "145", "-w", str(audio_wav), text], check=True, timeout=60)
+            ffprobe_bin = shutil.which("ffprobe") or "ffprobe"
+            dur_res = subprocess.run([ffprobe_bin, "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(audio_wav)], capture_output=True, text=True)
+            try:
+                duration = float(dur_res.stdout.strip())
+            except Exception:
+                duration = 20.0
+            text_words = text.split()
+            step = duration / max(1, len(text_words))
+            raw_words = [[round(i * step, 3), round((i + 1) * step, 3), w] for i, w in enumerate(text_words)]
+        else:
+            raise RuntimeError(f"Kokoro TTS failed ({r.returncode}):\n{r.stderr}")
+    else:
+        res = json.loads(r.stdout.strip())
+        line_info = res["lines"][0]
+        duration = line_info["duration"]
+        raw_words = line_info["words"]
 
     # Convert to structured word boundaries
     words = []

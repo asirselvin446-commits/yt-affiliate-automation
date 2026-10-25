@@ -9,4 +9,6 @@ yt-dlp>=2024.3.10
 soundfile>=0.12.1
 numpy>=1.26.0
 kokoro>=0.8.4
+spacy==3.7.5
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
 torch
