@@ -179,31 +179,27 @@ def search_and_download_product_clip(
 
         print(f"Trying footage candidate: '{cand_item.get('title')}' by @{cand_creator} (score: {cand_score:.1f})")
 
+        # CAUTIOUS route only (2026-10-25): mweb + cookies + EJS solver,
+        # one attempt per candidate, 3s pacing. No multi-client retry
+        # storm, no PO-token spoofing, no impersonation.
+        cookies_file = HERE / "cookies.txt"
+        cookie_args = ["--cookies", str(cookies_file)] if cookies_file.exists() else []
         dl_cmd = [
             str(PY), "-m", "yt_dlp",
             "-q", "--no-progress",
             "--no-playlist",
-            "--js-runtimes", "node",
-            "--extractor-args", "youtube:player_client=ios,mweb,android",
+            "--js-runtimes", "node", "--remote-components", "ejs:github",
+            "--extractor-args", "youtube:player_client=mweb",
+            "--retries", "1", "--fragment-retries", "1", "--socket-timeout", "30",
+            ] + cookie_args + [
             "-f", "bv*[height<=1080][ext=mp4]+ba[ext=m4a]/best[ext=mp4]/best",
             "--merge-output-format", "mp4",
             "-o", str(raw_video),
             cand_url
         ]
-        subprocess.run(dl_cmd, capture_output=True, text=True, timeout=120)
-
-        if not raw_video.exists():
-            fallback_dl_cmd = [
-                str(PY), "-m", "yt_dlp",
-                "-q", "--no-progress",
-                "--no-playlist",
-                "--js-runtimes", "node",
-                "--extractor-args", "youtube:player_client=android,web,ios",
-                "-f", "best[ext=mp4]/best",
-                "-o", str(raw_video),
-                cand_url
-            ]
-            subprocess.run(fallback_dl_cmd, capture_output=True, text=True, timeout=90)
+        dl_res = subprocess.run(dl_cmd, capture_output=True, text=True, timeout=120)
+        dl_err = dl_res.stderr.strip()[-2000:] if dl_res.stderr else ""
+        import time as _time; _time.sleep(3)
 
         if raw_video.exists() and raw_video.stat().st_size > 50_000:
             downloaded = True
@@ -216,7 +212,7 @@ def search_and_download_product_clip(
             print(f"Successfully downloaded footage for '{chosen.get('title')}' by @{creator}")
             break
         else:
-            print(f"Download failed for '{cand_item.get('title')}', trying next candidate...")
+            print(f"Download failed for '{cand_item.get('title')}' (mweb+cookies+ejs): {dl_err}, trying next candidate...")
 
     if not downloaded:
         raise RuntimeError(f"Could not download any of the {len(scored_candidates)} matching YouTube clips for '{product_query}'")
