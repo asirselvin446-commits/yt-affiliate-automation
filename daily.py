@@ -182,6 +182,7 @@ def run_pipeline():
         tomorrow = today + dt.timedelta(days=1)
         
         # Check upcoming slots
+        failed_slots = []
         target_slots = [
             f"{tomorrow} 12:00",
             f"{tomorrow} 18:00"
@@ -210,6 +211,7 @@ def run_pipeline():
 
             if not proj:
                 log(f"Could not build Short for slot {slot} after attempts")
+                failed_slots.append(slot)
                 continue
             
             # Check YouTube authentication
@@ -247,6 +249,10 @@ def run_pipeline():
             notify("Affiliate Short Ready 📦", f"Slot {slot} built for {pick['name']}.")
             break
             
+        if failed_slots:
+            log(f"Pipeline failed for slots: {failed_slots} - exiting non-zero so GitHub reports Failed, not a false green")
+            raise SystemExit(1)
+
     except Exception as e:
         log(f"Pipeline error: {e}")
         notify("Affiliate Pipeline Warning ⚠️", str(e)[:150])
